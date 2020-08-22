@@ -91,9 +91,8 @@ client.login(Token)
 
 ## License
 
-[GNU GPLv3](#)
+[GNU GPLv3](https://github.com/GoruAkiba/socketStats/blob/master/LICENSE)
 
-## Keywords
 
 
 
