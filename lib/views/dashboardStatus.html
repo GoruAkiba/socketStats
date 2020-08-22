@@ -103,7 +103,7 @@
         </div>
     </body>
     <script type="text/javascript">
-        const socket = io("http://localhost:8080");
+        const socket = io("/");
 
         socket.on("cl-connected",(data)=>{
             console.log("user connected with id:"+data.socket.id)
