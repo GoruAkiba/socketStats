@@ -43,7 +43,7 @@ app.listen(_PORT, () => {
 
 ```
 
-to make `WebServer` and `WebSocket` **run in singgle server**. You need to pass the `Server` to `socketStats`, and not the express application function. Also make sure to call `.listen` on the `server`, not the `app`.
+to make `WebServer` and `WebSocket` **run in singgle server**. You need to pass the `Server` to `socketstats`, and not the express application function. Also make sure to call `.listen` on the `server`, not the `app`.
 
 then for gathering info from the bot we need authorize `client` fom discord. so we do listen to port after te bot is ready.
 ```js
@@ -73,7 +73,7 @@ client.on('ready', () => {
     console.log('Ready..!')
 
     // socketStats Configuration
-    const socketStats = require("socketStats");
+    const socketStats = require("socketstats");
     const server = new socketStats(app, client);
 
     // open / listen port using socketStats
