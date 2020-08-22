@@ -1,0 +1,29 @@
+{
+  "name": "ws-tried",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoruAkiba/socketStats.git"
+  },
+  "homepage": "https://github.com/GoruAkiba/socketStats#readme.md",
+  "keywords": ["Discord.js","Dashboard-Stats","socket.io"],
+  "author": "GB_Sources",
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "express": "^4.17.1",
+    "os-utils": "0.0.14",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}

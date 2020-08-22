@@ -1,0 +1,282 @@
+<html>
+    <head>
+        <title>Stats Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- socket Begin -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <!-- <script defer src="/socket.io/socket.io.js"></script> -->
+        <!-- socket End -->
+
+        <!-- chart.js Begin -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+        <!-- chart.js End -->
+
+        <!-- Bootstrap Begin -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <!-- Bootstrap End -->
+
+        <style>
+            body{
+                background-color: lightgoldenrodyellow;
+            }
+            .inblk{
+                display: inline-block;
+                position: relative;
+            }
+
+            .pp-rofile{
+                --w: 130px;
+                width: var(--w);
+                height: var(--w);
+
+                border-radius: 50%;
+                background-color: darkgray;
+                background-repeat: no-repeat;
+                background-size: contain;
+                border: 3px solid #eee;
+            }
+
+            #chart{
+
+                height: 250px !important;
+                margin-bottom: 15px;
+
+            }
+
+            #ping{
+
+                height: 250px !important;
+
+            }
+
+            /* #bot-stats tr td:first-child(1){
+                background-color: #555;
+                color: white;
+            } */
+        </style>
+    </head>
+    <body>
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-7" style="min-height: 500px;">
+                    <div style="height:200px;width:720px; max-width: 100%;" >
+                        <canvas id="chart"></canvas>
+                        <canvas id="ping"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-0 bg-light rounded" style="min-height: 500px;">
+                    <div class="container-fluid pt-3 bg-dark text-light" style="min-height: 250px;" id="profile-info">
+                        <h4 class="d-flex justify-content-center">Loading...</h4>
+                    </div>
+                    <div class="p-3">
+                        <table id="bot-stats" class="table table-sm table-hover">
+                            <caption class="text-center">Server Stats, made with ♥ using <a href="https://nodejs.org/">Node.js</a> and <a href="https://socket.io/">socket.io</a> powered by <a href="https://gb-sources.xyz">GB_Sources</a></caption>
+                            <tbody>
+                                <tr>
+                                    <td>Server Uptime</td>
+                                    <td>: -</td>
+                                </tr>
+                                <tr>
+                                    <td>System Uptime</td>
+                                    <td>: -</td>
+                                </tr>
+                                <tr>
+                                    <td>Cpu Usage</td>
+                                    <td>: -%</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory Usage</td>
+                                    <td>: -%</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="text-center mt-3" style="width:100%"></tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        const socket = io("http://localhost:8080");
+
+        socket.on("cl-connected",(data)=>{
+            console.log("user connected with id:"+data.socket.id)
+            
+            document.title = `${data.username} | Stats Dashboard`;
+            let profile = `
+            <div class="inblk d-flex justify-content-center">
+                <div class="pp-rofile" style="background-image:url(${data.avatar})"></div>
+            </div>
+            <div class="inblk d-flex justify-content-center">
+                <h2>${data.username}</h2>
+            </div>
+            <div id="desc" class="text-secondary inblk d-flex justify-content-center">
+                <div style="position:relative">
+                    ${data.tag}
+                    <div style="vertical-align:top; transform:scale(0.5); position:absolute; top:-10px; right:-35px" class="inblk p-2 badge badge-sm badge-pill badge-primary text-md text-light">BOT</div>
+                </div>
+            </div>
+            `;
+
+            $("#profile-info").empty().append(profile);
+
+
+        })
+
+        socket.on("srv-stats", (data)=>{
+        // console.log(data);
+        // document.getElementById("stats").innerText = JSON.stringify(data,null,4);
+        var tableStats =  $("#bot-stats tbody");
+        var dataChart = window.chart.chart.data.datasets,
+            cpuUsage = dataChart[0],
+            memUsage = dataChart[1];
+
+        var dataChartPing = window.ping.chart.data.datasets[0];
+        try{
+            tableStats.empty().append(`
+        <tr>
+            <td>Server Uptime</td>
+            <td>: ${data.uptime}</td>
+        </tr>
+        <tr>
+            <td>System Uptime</td>
+            <td>: ${data.sysUptime}</td>
+        </tr>
+        <tr>
+            <td>Cpu Usage</td>
+            <td>: ${data.cpuUsage}</td>
+        </tr>
+        <tr>
+            <td>Memory Usage</td>
+            <td>: ${data.memUsage}</td>
+        </tr>
+            `);
+            var d = Date.now();
+            cpuUsage.data.push({
+                x: d,
+                y: parseInt(data.cpuUsage)
+            });
+            memUsage.data.push({
+                x: d,
+                y: parseInt(data.memUsage)
+            });
+
+            dataChartPing.data.push({
+                x: d,
+                y: parseInt(data.ping)
+            });
+
+            window.chart.update();
+            window.ping.update();
+        }catch(err){console.log(err)}
+        });
+
+        // build Useful-Link
+        const usefulLink = [
+        {
+            text: "Github repo",
+            url: "https://github.com/GoruAkiba/"
+        },
+        {
+            text: "Donate",
+            url: "https://trakteer.id/gb-sources-santoso"
+        }
+        ];
+        var tempLink = usefulLink.map(link=>{
+        return `<a href="${link.url}">${link.text}</a>`
+        }).join(" | ");
+        // $("#bot-stats tfoot").append( `
+        // <tr>
+        //     <td colspan="2">${tempLink}</td>
+        // </tr>
+        // `)
+
+        $("#bot-stats caption").append( `
+        <div class="pt-2">${tempLink}</div>
+        `)
+
+        // build Chart
+        var ctx = document.getElementById("chart").getContext('2d');
+                window.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: { 
+                        datasets: [
+                            {
+                                data: [{x:Date.now(),y:0}],
+                                label: 'Cpu Usage',
+                                borderColor: 'rgb(255, 99, 132)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                            },
+                            {
+                                data: [{x:Date.now(),y:0}],
+                                label: 'Memory Usage',
+                                borderColor: 'rgb(255, 202, 40)'
+                            }
+                        ] 
+                    },
+                    options: { 
+                        title: {
+                            display: true,
+                            text: 'Server Stats',
+                            position: "top",
+                            fontStyle: "bold",
+                            fontSize: 16
+                        },
+                        scales: { xAxes: [{
+                            type: 'realtime'
+                        
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Percent (%)'
+                            }
+                        }]
+                    } 
+                }
+                });
+
+                var ctxPing = document.getElementById("ping").getContext('2d');
+                window.ping = new Chart(ctxPing, {
+                    type: 'line',
+                    data: { 
+                        datasets: [
+                            {
+                                data: [{x:Date.now(),y:0}],
+                                label: 'client ws Ping',
+                                borderColor: 'rgb(0, 0, 0)',
+						        fill: false,
+                                steppedLine: 'after'
+                            }
+                        ] 
+                    },
+                    options: { 
+                        title: {
+                            display: true,
+                            text: 'BOT Hearthbeat',
+                            position: "top",
+                            fontStyle: "bold",
+                            fontSize: 16
+                        },
+                        scales: { xAxes: [{
+                            type: 'realtime'
+                        
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'milisecond (ms)'
+                            }
+                        }]
+                    } 
+                }
+            });
+
+    </script>
+</html>
