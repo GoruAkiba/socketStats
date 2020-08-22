@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
@@ -12,8 +13,12 @@
     "type": "git",
     "url": "git+https://github.com/GoruAkiba/socketStats.git"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "bug": {
+    "url": "https://github.com/GoruAkiba/socketStats/issues"
+  },
   "homepage": "https://github.com/GoruAkiba/socketStats#readme.md",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  
   "keywords": ["Discord.js","Dashboard-Stats","socket.io"],
   "author": "GB_Sources",
   "license": "GNU GPLv3",
