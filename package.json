@@ -1,6 +1,6 @@
 {
   "name": "socketstats",
-  "version": "1.0.7.1",
+  "version": "1.0.8",
   "description": "Server statistics Dashboard builder for Discord BOT through WebSocket.",
   "main": "index.js",
   "bin": "index.js",
