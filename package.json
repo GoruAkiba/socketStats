@@ -17,8 +17,6 @@
     "url": "https://github.com/GoruAkiba/socketStats/issues"
   },
   "homepage": "https://github.com/GoruAkiba/socketStats#readme.md",
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
-  
   "keywords": ["Discord.js","Dashboard-Stats","socket.io"],
   "author": "goruakiba",
   "license": "GNU GPLv3",

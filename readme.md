@@ -20,7 +20,7 @@ this project require following packages:
 ## Installation
 install the package using:
 ```
-$ npm install socketStats
+$ npm install socketstats
 ```
 
 ### Basic routing
