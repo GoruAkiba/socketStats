@@ -12,6 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/GoruAkiba/socketStats.git"
   },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "homepage": "https://github.com/GoruAkiba/socketStats#readme.md",
   "keywords": ["Discord.js","Dashboard-Stats","socket.io"],
   "author": "GB_Sources",
