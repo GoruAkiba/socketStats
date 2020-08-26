@@ -1,15 +1,19 @@
 SOCKET STATS | DASHBOARD for DISCORD BOT STATS
 ============================================== 
 > Server statistics Dashboard builder for Discord BOT through WebSocket.
+<center>
 
+![dashboard](https://cdn.discordapp.com/attachments/664516457542975492/746637803332304966/unknown.png)
+
+</center>
 This dasboard base on Bootstrap and chart.js. then for the comunication we open a websocket using socket.io
 
-installing this package and complete all requirement, ur project will automaticly greanate websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
+installing this package and complete all requirement, ur project will automatically make websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
 
 
 > The following example attaches project to a plain Node.JS HTTP server listening on port 8080 .
 
-</ Description soon >
+
 
 ## Requirement
 this project require following packages:
