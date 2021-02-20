@@ -8,7 +8,7 @@ SOCKET STATS | DASHBOARD for DISCORD BOT STATS
 </center>
 This dasboard base on Bootstrap and chart.js. then for the comunication we open a websocket using socket.io
 
-installing this package and complete all requirement, ur project will automatically make websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
+installing this package and complete all requirement, ur project will automatically make websocket server and open new routing following `http://localhost:8080/gb-status`. or `<project_url>/gb-status`
 
 
 > The following example attaches project to a plain Node.JS HTTP server listening on port 8080 .
