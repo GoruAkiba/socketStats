@@ -6,7 +6,7 @@ SOCKET STATS | DASHBOARD for DISCORD BOT STATS
 ![dashboard](https://cdn.discordapp.com/attachments/664516457542975492/746637803332304966/unknown.png)
 
 </center>
-This dashboard is based on Bootstrap and chart.js. For the comunication we open a websocket using socket.io
+This dashboard is based on Bootstrap and chart.js. For the communication we open a websocket using socket.io
 
 installing this package will complete all requirements. Your project will automatically create a websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
 
