@@ -6,17 +6,13 @@ SOCKET STATS | DASHBOARD for DISCORD BOT STATS
 ![dashboard](https://cdn.discordapp.com/attachments/664516457542975492/746637803332304966/unknown.png)
 
 </center>
-This dasboard base on Bootstrap and chart.js. then for the comunication we open a websocket using socket.io
+This dashboard is based on Bootstrap and chart.js. For the comunication we open a websocket using socket.io
 
-installing this package and complete all requirement, ur project will automatically make websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
-
-
-> The following example attaches project to a plain Node.JS HTTP server listening on port 8080 .
-
+installing this package will complete all requirements. Your project will automatically create a websocket server and open new routing following `http://localost:8080/gb-status`. or `<project_url>/gb-status`
 
 
 ## Requirement
-this project require following packages:
+This project require following packages:
 + [express](https://www.npmjs.com/package/express)
 + [socket.io](https://www.npmjs.com/package/socket.io)
 + [os-utils](https://www.npmjs.com/package/os-utils)
@@ -26,9 +22,13 @@ install the package using:
 ```
 $ npm install socketstats
 ```
+or
+```
+$ npm -i socketstats
+```
 
 ### Basic routing
-then use express and create express basic routing.
+Then use express and create a basic routing.
 > The following example attaches project to a plain Node.JS HTTP server listening on port 8080 .
 ```js
 const express = require("express");
@@ -47,9 +47,9 @@ app.listen(_PORT, () => {
 
 ```
 
-to make `WebServer` and `WebSocket` **run in singgle server**. You need to pass the `Server` to `socketstats`, and not the express application function. Also make sure to call `.listen` on the `server`, not the `app`.
+To make `WebServer` and `WebSocket` **run on a single server**. You need to pass the `Server` to `socketstats`, and not to the express application. So make sure to call `server.listen` instead of `app.listen`.
 
-then for gathering info from the bot we need authorize `client` fom discord. so we do listen to port after te bot is ready.
+For gathering info from the bot we need to authorize `client` from Discord. So we call the server in the ready function.
 ```js
 const express = require("express");
 const app = express();
