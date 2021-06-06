@@ -67,7 +67,7 @@ const _PORT = process.env.PORT || 8080;
 
 // basic discord,js BOT requirement
 const Discord = require("discord.js");
-const client = Discord.Client();
+const client = new Discord.Client();
 
 // some handler command
 // .....
