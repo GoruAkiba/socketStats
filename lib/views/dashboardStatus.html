@@ -1,122 +1,364 @@
 <html>
-    <head>
-        <title>Stats Dashboard</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- socket Begin -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-        <!-- <script defer src="/socket.io/socket.io.js"></script> -->
-        <!-- socket End -->
 
-        <!-- chart.js Begin -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
-        <!-- chart.js End -->
+<head>
+    <title>Stats Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- socket Begin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <!-- <script defer src="/socket.io/socket.io.js"></script> -->
+    <!-- socket End -->
 
-        <!-- Bootstrap Begin -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-        <!-- Bootstrap End -->
+    <!-- chart.js Begin -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+    <!-- chart.js End -->
 
-        <style>
-            body{
-                background-color: lightgoldenrodyellow;
-            }
-            .inblk{
-                display: inline-block;
-                position: relative;
-            }
+    <!-- color-thief Begin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <!-- color-thief End -->
 
-            .pp-rofile{
-                --w: 130px;
-                width: var(--w);
-                height: var(--w);
+    <!-- Bootstrap Begin -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <!-- Bootstrap End -->
 
-                border-radius: 50%;
-                background-color: darkgray;
-                background-repeat: no-repeat;
-                background-size: contain;
-                border: 3px solid #eee;
-            }
+    <style>
+        body {
+            background-color: lightgoldenrodyellow;
+        }
 
-            #chart{
+        .inblk {
+            display: inline-block;
+            position: relative;
+        }
 
-                height: 250px !important;
-                margin-bottom: 15px;
+        .pp-rofile {
+            --w: 130px;
+            width: var(--w);
+            height: var(--w);
+            position: absolute;
+            top: -80px;
+            border-radius: 50%;
+            background-color: darkgray;
+            background-repeat: no-repeat;
+            background-size: contain;
+            border: 3px solid #eee;
+        }
 
-            }
+        #chart {
 
-            #ping{
+            height: 250px !important;
+            margin-bottom: 15px;
 
-                height: 250px !important;
+        }
 
-            }
+        #ping {
 
-            /* #bot-stats tr td:first-child(1){
+            height: 250px !important;
+
+        }
+
+        .chartjs-wrapper {
+            margin: 0 auto;
+            width: 100%;
+            height: auto;
+        }
+
+        /* #bot-stats tr td:first-child(1){
                 background-color: #555;
                 color: white;
             } */
-        </style>
-    </head>
-    <body>
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-lg-7" style="min-height: 500px;">
-                    <div style="height:200px;width:720px; max-width: 100%;" >
-                        <canvas id="chart"></canvas>
-                        <canvas id="ping"></canvas>
-                    </div>
-                </div>
-                <div class="col-lg-4 p-0 bg-light rounded" style="min-height: 500px;">
-                    <div class="container-fluid pt-3 bg-dark text-light" style="min-height: 250px;" id="profile-info">
-                        <h4 class="d-flex justify-content-center">Loading...</h4>
-                    </div>
-                    <div class="p-3">
-                        <table id="bot-stats" class="table table-sm table-hover">
-                            <caption class="text-center">Server Stats, made with ♥ using <a href="https://nodejs.org/">Node.js</a> and <a href="https://socket.io/">socket.io</a> powered by <a href="https://gb-sources.xyz">GB_Sources</a></caption>
-                            <tbody>
-                                <tr>
-                                    <td>Server Uptime</td>
-                                    <td>: -</td>
-                                </tr>
-                                <tr>
-                                    <td>System Uptime</td>
-                                    <td>: -</td>
-                                </tr>
-                                <tr>
-                                    <td>Cpu Usage</td>
-                                    <td>: -%</td>
-                                </tr>
-                                <tr>
-                                    <td>Memory Usage</td>
-                                    <td>: -%</td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="text-center mt-3" style="width:100%"></tfoot>
-                        </table>
-                    </div>
 
+        @media only screen and (max-width: 700px) {
+            #profile-info {
+                margin-top: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-lg-6" style="padding-bottom: 1.5rem!important;">
+                <div class="chartjs-wrapper">
+                    <canvas class="cpu-gauge"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6" style="padding-bottom: 1.5rem!important;">
+                <div class="chartjs-wrapper">
+                    <canvas class="ram-gauge"></canvas>
                 </div>
             </div>
         </div>
-    </body>
-    <script type="text/javascript">
-        const socket = io("/");
+        <div class="col-lg-12 p-0 rounded">
+            <div class="container-fluid pt-3 pb-3 text-light" style="background-color: #343a40;" id="profile-info">
+                <h4 class="d-flex justify-content-center">Loading...</h4>
+            </div>
+            <div class="p-3 bg-light ">
+                <div id="bot-stats" class="row">
 
-        socket.on("cl-connected",(data)=>{
-            console.log("user connected with id:"+data.socket.id)
-            
-            document.title = `${data.username} | Stats Dashboard`;
-            let profile = `
+                    <div class="col-lg-6">
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Server Uptime</td>
+                                    <td id="serverUptime">: -</td>
+                                </tr>
+                                <tr>
+                                    <td>System Uptime</td>
+                                    <td id="systemUptime">: -</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Cpu Usage</td>
+                                    <td id="cpuUsage">: -%</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory Usage</td>
+                                    <td id="memoryUsage">: -%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <tfoot class="text-center mt-3" style="width:100%"></tfoot>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    function invertHex(hex) {
+        if (hex.indexOf('#') === 0) {
+            hex = hex.slice(1);
+        }
+        // convert 3-digit hex to 6-digits.
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        if (hex.length !== 6) {
+            throw new Error('Invalid HEX color.');
+        }
+        // invert color components
+        var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+            g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+            b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+        // pad each with zeros and return
+        return '#' + padZero(r) + padZero(g) + padZero(b);
+    }
+
+    function padZero(str, len) {
+        len = len || 2;
+        var zeros = new Array(len).join('0');
+        return (zeros + str).slice(-len);
+    }
+
+    function convertHex(hex, opacity) {
+        hex = hex.replace('#', '');
+        r = parseInt(hex.substring(0, 2), 16);
+        g = parseInt(hex.substring(2, 4), 16);
+        b = parseInt(hex.substring(4, 6), 16);
+        result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+        return result;
+    }
+
+    // Create chart
+    var cpuCtx = document.getElementsByClassName("cpu-gauge");
+    var cpuChart = new Chart(cpuCtx, {
+        type: "doughnut",
+        data: {
+            labels: ["USED", "FREE"],
+            datasets: [{
+                label: "Gauge",
+                data: [0, 100],
+                color: '#ffffff',
+                backgroundColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                    "rgb(255, 205, 86)"
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80, // precent
+            plugins: {
+                datalabels: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: '#ffffff',
+                    color: function (context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    font: function (context) {
+                        var w = context.chart.width;
+                        return {
+                            size: w < 512 ? 18 : 20
+                        }
+                    },
+                    align: 'start',
+                    anchor: 'start',
+                    offset: 10,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    formatter: function (value, context) {
+                        if (value < 10) {
+                            return null;
+                        }
+                        return value + ' %';
+                    }
+                }
+            },
+            legend: {
+                display: true
+            },
+            tooltips: {
+                enabled: true
+            },
+            title: {
+                display: true,
+                text: 'CPU USAGE (%)',
+                fontStyle: "bold",
+                fontSize: 16
+            }
+        }
+    });
+
+    var ramCtx = document.getElementsByClassName("ram-gauge");
+    var ramChart = new Chart(ramCtx, {
+        type: "doughnut",
+        data: {
+            labels: ["USED", "FREE"],
+            datasets: [{
+                label: "Gauge",
+                data: [0, 100],
+                backgroundColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                    "rgb(255, 205, 86)"
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80, // precent
+            plugins: {
+                datalabels: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: '#ffffff',
+                    color: function (context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    font: function (context) {
+                        var w = context.chart.width;
+                        return {
+                            size: w < 512 ? 18 : 20
+                        }
+                    },
+                    align: 'start',
+                    anchor: 'start',
+                    offset: 10,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    formatter: function (value, context) {
+                        var i = context.dataIndex;
+                        var len = context.dataset.data.length - 1;
+                        if (value < 10) {
+                            return null;
+                        }
+                        return value + ' %';
+                    }
+                }
+            },
+            legend: {
+                display: true
+            },
+            tooltips: {
+                enabled: true
+            },
+            title: {
+                display: true,
+                text: 'RAM USAGE (%)',
+                fontStyle: "bold",
+                fontSize: 16
+            }
+        }
+    });
+    function change_gauge(chart, label, data) {
+        chart.data.datasets.forEach((dataset) => {
+            if (dataset.label == label) {
+                dataset.data = data;
+            }
+        });
+        chart.update();
+    }
+
+
+
+
+    const socket = io("/");
+    const colorThief = new ColorThief();
+
+    socket.on("cl-connected", (data) => {
+        console.log("user connected with id:" + data.socket.id)
+
+        const img = new Image();
+        img.src = data.avatar;
+        img.crossOrigin = "Anonymous";
+        const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
+            const hex = x.toString(16)
+            return hex.length === 1 ? '0' + hex : hex
+        }).join('')
+
+        if (img.complete) {
+            let dominColor = colorThief.getColor(img);
+            const hexColor = rgbToHex(dominColor['0'], dominColor['1'], dominColor['2']);
+            if (hexColor != "#ffffff") {
+                const invertedHexColor = convertHex(invertHex(hexColor), 0.5);
+                console.log(invertedHexColor);
+                $("#profile-info").css("background-color", invertedHexColor);
+                document.body.style.backgroundColor = hexColor;
+            }
+        } else {
+            img.addEventListener('load', function () {
+                let dominColor = colorThief.getColor(img);
+                const hexColor = rgbToHex(dominColor['0'], dominColor['1'], dominColor['2']);
+                if (hexColor != "#ffffff") {
+                    const invertedHexColor = convertHex(invertHex(hexColor), 0.5);
+                    console.log(invertedHexColor);
+                    $("#profile-info").css("background-color", invertedHexColor);
+                    document.body.style.backgroundColor = hexColor;
+                }
+            });
+        }
+
+        document.title = `${data.username} | Stats Dashboard`;
+        let profile = `
             <div class="inblk d-flex justify-content-center">
                 <div class="pp-rofile" style="background-image:url(${data.avatar})"></div>
             </div>
-            <div class="inblk d-flex justify-content-center">
+            <div class="inblk d-flex justify-content-center" style="margin-top: 50px;">
                 <h2>${data.username}</h2>
             </div>
-            <div id="desc" class="text-secondary inblk d-flex justify-content-center">
+            <div id="desc" class="inblk d-flex justify-content-center">
                 <div style="position:relative">
                     ${data.tag}
                     <div style="vertical-align:top; transform:scale(0.5); position:absolute; top:-10px; right:-35px" class="inblk p-2 badge badge-sm badge-pill badge-primary text-md text-light">BOT</div>
@@ -124,159 +366,27 @@
             </div>
             `;
 
-            $("#profile-info").empty().append(profile);
+        $("#profile-info").empty().append(profile);
 
 
-        })
-
-        socket.on("srv-stats", (data)=>{
+    })
+    socket.on("srv-stats", (data) => {
         // console.log(data);
         // document.getElementById("stats").innerText = JSON.stringify(data,null,4);
-        var tableStats =  $("#bot-stats tbody");
-        var dataChart = window.chart.chart.data.datasets,
-            cpuUsage = dataChart[0],
-            memUsage = dataChart[1];
+        let cpuFree = Math.round(100 - parseInt(data.cpuUsage));
+        let cpuUsed = Math.round(parseInt(data.cpuUsage));
+        let ramFree = Math.round(100 - parseInt(data.memUsage));
+        let ramUsed = Math.round(parseInt(data.memUsage));
 
-        var dataChartPing = window.ping.chart.data.datasets[0];
-        try{
-            tableStats.empty().append(`
-        <tr>
-            <td>Server Uptime</td>
-            <td>: ${data.uptime}</td>
-        </tr>
-        <tr>
-            <td>System Uptime</td>
-            <td>: ${data.sysUptime}</td>
-        </tr>
-        <tr>
-            <td>Cpu Usage</td>
-            <td>: ${data.cpuUsage}</td>
-        </tr>
-        <tr>
-            <td>Memory Usage</td>
-            <td>: ${data.memUsage}</td>
-        </tr>
-            `);
-            var d = Date.now();
-            cpuUsage.data.push({
-                x: d,
-                y: parseInt(data.cpuUsage)
-            });
-            memUsage.data.push({
-                x: d,
-                y: parseInt(data.memUsage)
-            });
+        change_gauge(cpuChart, "Gauge", [cpuUsed, cpuFree])
+        change_gauge(ramChart, "Gauge", [ramUsed, ramFree])
 
-            dataChartPing.data.push({
-                x: d,
-                y: parseInt(data.ping)
-            });
+        $("#serverUptime").empty().append(`${data.uptime}`);
+        $("#systemUptime").empty().append(`${data.sysUptime}`);
+        $("#cpuUsage").empty().append(`${data.cpuUsage}`);
+        $("#memoryUsage").empty().append(`${data.memUsage}`);
 
-            window.chart.update();
-            window.ping.update();
-        }catch(err){console.log(err)}
-        });
+    });
+</script>
 
-        // build Useful-Link
-        const usefulLink = [
-        {
-            text: "Github repo",
-            url: "https://github.com/GoruAkiba/"
-        },
-        {
-            text: "Donate",
-            url: "https://trakteer.id/gb-sources-santoso"
-        }
-        ];
-        var tempLink = usefulLink.map(link=>{
-        return `<a href="${link.url}">${link.text}</a>`
-        }).join(" | ");
-        // $("#bot-stats tfoot").append( `
-        // <tr>
-        //     <td colspan="2">${tempLink}</td>
-        // </tr>
-        // `)
-
-        $("#bot-stats caption").append( `
-        <div class="pt-2">${tempLink}</div>
-        `)
-
-        // build Chart
-        var ctx = document.getElementById("chart").getContext('2d');
-                window.chart = new Chart(ctx, {
-                    type: 'line',
-                    data: { 
-                        datasets: [
-                            {
-                                data: [{x:Date.now(),y:0}],
-                                label: 'Cpu Usage',
-                                borderColor: 'rgb(255, 99, 132)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.5)'
-                            },
-                            {
-                                data: [{x:Date.now(),y:0}],
-                                label: 'Memory Usage',
-                                borderColor: 'rgb(255, 202, 40)'
-                            }
-                        ] 
-                    },
-                    options: { 
-                        title: {
-                            display: true,
-                            text: 'Server Stats',
-                            position: "top",
-                            fontStyle: "bold",
-                            fontSize: 16
-                        },
-                        scales: { xAxes: [{
-                            type: 'realtime'
-                        
-                        }],
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Percent (%)'
-                            }
-                        }]
-                    } 
-                }
-                });
-
-                var ctxPing = document.getElementById("ping").getContext('2d');
-                window.ping = new Chart(ctxPing, {
-                    type: 'line',
-                    data: { 
-                        datasets: [
-                            {
-                                data: [{x:Date.now(),y:0}],
-                                label: 'client ws Ping',
-                                borderColor: 'rgb(0, 0, 0)',
-						        fill: false,
-                                steppedLine: 'after'
-                            }
-                        ] 
-                    },
-                    options: { 
-                        title: {
-                            display: true,
-                            text: 'BOT Hearthbeat',
-                            position: "top",
-                            fontStyle: "bold",
-                            fontSize: 16
-                        },
-                        scales: { xAxes: [{
-                            type: 'realtime'
-                        
-                        }],
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'milisecond (ms)'
-                            }
-                        }]
-                    } 
-                }
-            });
-
-    </script>
 </html>
